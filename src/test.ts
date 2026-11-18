@@ -1,19 +1,37 @@
-import Abbreviations from '.';
-import Names from './abbreviations';
+import Codes from '.';
+import Names from './codes';
 
-const { LANGUAGES_ABBREVIATION } = Abbreviations;
+const { all, ALL, POLISH, isLanguageCode } = Codes;
 
-const NUMBER_OF_ABBREVIATIONS = 232;
-const LANGUAGE_KEYS = [...Object.keys(Names)] as const;
+const CODES_COUNT = 232;
 
-const removeDashesWithSpace = (arr: readonly string[]): string[] =>
-    arr.map((arg: string) => arg.replace('_', ' '));
+const getSortedCodesByVariableName = (): string[] =>
+  Object.entries(Names)
+    .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+    .map(([, value]) => value);
 
-const sortArray = (arr: readonly string[]): string[] =>
-    removeDashesWithSpace(arr).sort();
+it('should contain all codes', () => {
+  expect(ALL).toHaveLength(CODES_COUNT);
+  expect(new Set(ALL).size).toBe(CODES_COUNT);
+});
 
-it('should contain all sorted names', () => {
-    expect(LANGUAGES_ABBREVIATION).toHaveLength(NUMBER_OF_ABBREVIATIONS);
-    expect((new Set(LANGUAGES_ABBREVIATION)).size).toBe(NUMBER_OF_ABBREVIATIONS);
-    expect(removeDashesWithSpace(LANGUAGE_KEYS)).toEqual(sortArray([...LANGUAGE_KEYS]));
+it('should be sorted', () => {
+  expect(ALL).toEqual(all);
+  expect(ALL).toEqual(getSortedCodesByVariableName());
+});
+
+describe('Value validation: ', () => {
+  it.each([POLISH, 'pl'])('should pass for %s', code => {
+    expect(isLanguageCode(code)).toBe(true);
+  });
+
+  describe('should not pass ', () => {
+    it.each(['some bad string', 'xc', 'pol'])('for %s', code => {
+      expect(isLanguageCode(code)).toBe(false);
+    });
+
+    it.each(['some bad string', 'xc', 'PL', 'Pl', 'pL', 'pol'])('when case sensitive for %s', code => {
+      expect(isLanguageCode(code, true)).toBe(false);
+    });
+  });
 });

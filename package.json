@@ -1,33 +1,33 @@
 {
-  "name": "td-languages-abbreviations",
-  "version": "1.0.0",
-  "description": "TypeScript/JavaScript library with 232 language abbreviations (e.g. en, pl, it). Includes typed constants and language selectors.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "name": "td-languages-codes",
+  "version": "1.1.0",
+  "description": "TypeScript/JavaScript library with 232 language codes (e.g. en, pl, it). Includes typed constants and language-code validation.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": false,
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts --clean",
     "prepublishOnly": "npm run build",
     "test": "jest",
-    "lint": "eslint src tests --ext .ts",
-    "lint:fix": "eslint src tests --ext .ts --fix",
-    "format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\""
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\""
   },
   "keywords": [
     "languages",
-    "language-abbreviations",
+    "language codes",
+    "language-codes",
     "internationalization",
     "localization",
     "locale",
-    "language-selector",
     "typescript",
-    "constants",
-    "language-list"
+    "constants"
   ],
   "author": "Jarosław Tusiński",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^29.5.12",
+    "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.56.0",

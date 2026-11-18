@@ -1,214 +1,152 @@
 # [TusinskiDev] Languages Abbreviations
 
-A TypeScript/JavaScript library providing standardized language abbreviations for 232 languages worldwide. Perfect for internationalization and localization projects.
+A TypeScript/JavaScript library providing 232 standardized language codes for internationalization and localization projects.
 
 ## Features
 
-- ✅ **232 Language Abbreviations**: Comprehensive coverage of languages from around the world
-- ✅ **TypeScript Support**: Full type safety with TypeScript definitions
-- ✅ **Zero Dependencies**: Lightweight library with no external dependencies
-- ✅ **Tree Shaking**: Import only what you need
+- ✅ **232 language codes** — list of languages codes: `ALL` (readonly), `all`
+- ✅ **TypeScript support** — typed constants and a `LanguageCode` union type
+- ✅ **Code validation** — check values with `isLanguageCode` and optional case-sensitive matching
+- ✅ **Zero dependencies** — lightweight and tree-shakeable
+- ✅ **CommonJS and ESM** — ready for modern Node.js and bundlers
 
 ## Installation
 
 ```bash
-npm install td-languages-abbreviations
+npm install td-languages-codes
 ```
 
-or
-
 ```bash
-yarn add td-languages-abbreviations
+yarn add td-languages-codes
 ```
 
 ## Usage
 
-### Basic Usage
-
 ```typescript
-import Abbreviations from 'td-languages-abbreviations';
+import Languages from 'td-languages-codes';
 
-// Access individual language abbreviations
-console.log(Abbreviations.ENGLISH); // 'en'
-console.log(Abbreviations.POLISH); // 'pl'
-console.log(Abbreviations.GERMAN); // 'de'
+console.log(Languages.ENGLISH); // 'en'
+console.log(Languages.POLISH); // 'pl'
+console.log(Languages.GERMAN); // 'de'
+
+console.log(Languages.CODES_COUNT); // 232
+console.log(Languages.ALL); // readonly array of all codes
+console.log(Languages.all); // mutable copy of all codes
 ```
 
-### Using the Language Array
+### Validation
+
+`isLanguageCode` is case-insensitive by default:
 
 ```typescript
-import { LANGUAGES_ABBREVIATION } from 'td-languages-abbreviations';
+Languages.isLanguageCode('en'); // true
+Languages.isLanguageCode('EN'); // true
+Languages.isLanguageCode('invalid'); // false
 
-// Get all language abbreviations as an array
-console.log(LANGUAGES_ABBREVIATION.length); // 232
-console.log(LANGUAGES_ABBREVIATION.includes('en')); // true
+Languages.isLanguageCode('EN', true); // false
+Languages.isLanguageCode('en', true); // true
 ```
 
-### TypeScript Support
+### TypeScript
 
 ```typescript
-import type { LanguageAbbreviation } from 'td-languages-abbreviations';
+import Languages from 'td-languages-codes';
+import type { LanguageCode } from 'td-languages-codes';
 
-function setLanguage(lang: LanguageAbbreviation) {
-  // TypeScript will ensure only valid language codes are passed
-  console.log(`Setting language to: ${lang}`);
+function setLanguage(language: LanguageCode) {
+  console.log(`Setting language to: ${language}`);
 }
 
-setLanguage('en'); // ✅ Valid
-setLanguage('invalid'); // ❌ TypeScript error
+setLanguage(Languages.ENGLISH); // ✅ Valid
+setLanguage('xx'); // ❌ TypeScript error
 ```
 
-### Available Languages
+### Lists and selectors
 
-The library includes abbreviations for languages such as:
+```typescript
+import Languages from 'td-languages-codes';
 
-- English (`en`)
-- Spanish (`es`)
-- French (`fr`)
-- German (`de`)
-- Chinese (`zh`)
-- Japanese (`ja`)
-- Arabic (`ar`)
-- Russian (`ru`)
-- Portuguese (`pt`)
-- Italian (`it`)
-- And 222 more...
+const options = Languages.ALL.map(code => ({
+  value: code,
+  label: code,
+}));
 
-## API Reference
+console.log(options);
+```
+
+## API
 
 ### Constants
 
-All language abbreviations are available as named constants:
+All language codes are available as named properties on the default export:
 
 ```typescript
-import Abbreviations from 'td-languages-abbreviations';
-
-Abbreviations.ENGLISH     // 'en'
-Abbreviations.SPANISH     // 'es'
-Abbreviations.FRENCH      // 'fr'
-// ... and so on
+Languages.AFRIKAANS // 'af'
+Languages.ARABIC // 'ar'
+Languages.CHINESE // 'zh'
+Languages.ENGLISH // 'en'
+Languages.FRENCH // 'fr'
+Languages.GERMAN // 'de'
+Languages.POLISH // 'pl'
+Languages.SPANISH // 'es'
 ```
 
-### LANGUAGES_ABBREVIATION Array
+For the complete list, inspect `Languages.ALL` or `Languages.all`.
 
-A readonly array containing all 232 language abbreviations:
+### `Languages.ALL`
+
+A readonly tuple containing all 232 codes:
 
 ```typescript
-import { LANGUAGES_ABBREVIATION } from 'td-languages-abbreviations';
-
-type LanguageAbbreviation = typeof LANGUAGES_ABBREVIATION[number];
+const code = Languages.ALL[0];
+console.log(Languages.ALL.length); // 232
 ```
 
-### TypeScript Types
+### `Languages.all`
+
+An array copy of all codes:
 
 ```typescript
-import type { LanguageAbbreviation } from 'td-languages-abbreviations';
+const supported: LanguageCode[] = Languages.all;
+```
 
-// Use for type-safe language handling
+### `Languages.CODES_COUNT`
+
+The number of available language codes:
+
+```typescript
+console.log(Languages.CODES_COUNT); // 232
+```
+
+### `Languages.isLanguageCode(code, caseSensitive?)`
+
+Checks whether a value is one of the supported language codes.
+
+- `code: unknown` — value to validate
+- `caseSensitive: boolean` — optional, defaults to `false`
+- Returns `boolean`
+
+```typescript
+Languages.isLanguageCode('PL'); // true
+Languages.isLanguageCode('PL', true); // false
+```
+
+### `LanguageCode`
+
+The TypeScript union type derived from `Languages.ALL`:
+
+```typescript
+import type { LanguageCode } from 'td-languages-codes';
+
 interface UserPreferences {
-  language: LanguageAbbreviation;
-  fallbackLanguage: LanguageAbbreviation;
+  language: LanguageCode;
+  fallbackLanguage: LanguageCode;
 }
 ```
-
-## Examples
-
-### Language Selector Component
-
-```typescript
-import React from 'react';
-import { LANGUAGES_ABBREVIATION } from 'td-languages-abbreviations';
-
-const LanguageSelector: React.FC = () => {
-  return (
-    <select>
-      {LANGUAGES_ABBREVIATION.map(lang => (
-        <option key={lang} value={lang}>
-          {lang.toUpperCase()}
-        </option>
-      ))}
-    </select>
-  );
-};
-```
-
-### Validation Function
-
-```typescript
-import type { LanguageAbbreviation } from 'td-languages-abbreviations';
-
-function isValidLanguage(lang: string): lang is LanguageAbbreviation {
-  return LANGUAGES_ABBREVIATION.includes(lang as LanguageAbbreviation);
-}
-
-// Usage
-if (isValidLanguage(userInput)) {
-  // TypeScript knows userInput is a valid LanguageAbbreviation
-  setUserLanguage(userInput);
-}
-```
-
-### Internationalization Helper
-
-```typescript
-import Abbreviations from 'td-languages-abbreviations';
-
-const SUPPORTED_LANGUAGES = [
-  Abbreviations.ENGLISH,
-  Abbreviations.SPANISH,
-  Abbreviations.FRENCH,
-  Abbreviations.GERMAN
-] as const;
-
-function getLocalizedContent(language: string) {
-  if (!SUPPORTED_LANGUAGES.includes(language as any)) {
-    throw new Error(`Unsupported language: ${language}`);
-  }
-
-  // Load localized content...
-}
-```
-
-## Development
-
-### Building
-
-```bash
-npm run build
-```
-
-### Testing
-
-```bash
-npm test
-```
-
-### Linting
-
-```bash
-npm run lint
-npm run lint:fix
-```
-
-### Formatting
-
-```bash
-npm run format
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ## Author
 
